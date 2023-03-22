@@ -1,9 +1,28 @@
-import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Button, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import UserList, { User } from './hoc/UserList';
+import { useEffect, useState } from 'react';
 
 import EnhancedTable from './Table';
+import withLoading from './hoc/withLoading';
+
+const UserListWithLoading = withLoading(UserList);
+
+const mockUsers = [
+  { id: 1, name: 'Rokas', email: 'Rokas@gmail.com' },
+  { id: 2, name: 'Inga', email: 'Inga@gmail.com' },
+];
 
 const Examples = () => {
-  // Formikas naudoja children as a function
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setUsers(mockUsers);
+      setIsLoading(false);
+    }, 2500);
+  }, [mockUsers]);
 
   const array = [{ name: 'Rokas', surname: 'Andreikenas' }];
   const logs = [
@@ -68,6 +87,17 @@ const Examples = () => {
         data={logs}
         render={(rowData, column) => rowData[column.toLowerCase()]}
       /> */}
+
+      <br />
+      <br />
+      <br />
+
+      {isLoading ? <CircularProgress /> : <UserList users={users} />}
+      <br />
+      <br />
+
+      {/* HOC example */}
+      <UserListWithLoading loading={isLoading} users={users} />
     </>
   );
 };
